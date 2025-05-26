@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView android:text="한강 자전거 데이트"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView android:text="📅 2023.11.15"
+        android:textSize="13sp"
+        android:textColor="#999999"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView android:text="♥ 여의도 한강공원"
+        android:textSize="13sp"
+        android:textColor="#999999"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <!-- 별점은 이미지 or TextView 별모양으로 구현 -->
+    <TextView
+        android:text="⭐⭐⭐⭐⭐"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFD700"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp" />
+</LinearLayout>
