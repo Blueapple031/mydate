@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
             val preference = preferenceInput.text.toString()
 
 
-            val intent = Intent(this, HomeActivity::class.java).apply {
+            val intent = Intent(this, SearchActivity::class.java).apply {
                 putExtra("location", location)
                 putExtra("date", date)
                 putExtra("preference", preference)

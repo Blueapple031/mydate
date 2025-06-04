@@ -2,78 +2,42 @@ package com.example.mydate
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.mydate.data.model.ChatRequest
-import com.example.mydate.data.model.ChatResponse
-import com.example.mydate.data.model.Message
-import com.example.mydate.data.network.OpenAIClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class HomeActivity : AppCompatActivity() {
-
-    private var isRequestInProgress = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        val location = intent.getStringExtra("location") ?: ""
+        // 'all_courses' 데이터를 전달받음
+        val allCourses = intent.getSerializableExtra("all_courses") as? ArrayList<List<Pair<String, String>>> ?: return
+
         val date = intent.getStringExtra("date") ?: ""
-        val preference = intent.getStringExtra("preference") ?: ""
+        val location = intent.getStringExtra("location") ?: ""
 
-        val prompt = """
-            아래 정보를 바탕으로 데이트 코스를 추천해줘.
-            - 지역: $location
-            - 날짜: $date
-            - 스타일: $preference
-            답변 형식은 
-            오전: 장소 이름,위치
-            점심: 장소 이름,위치
-            오후: 장소 이름,위치
-            저녁: 장소 이름,위치 
-        """.trimIndent()
+        // 날짜와 위치 텍스트뷰 업데이트
+        val dateTextView = findViewById<TextView>(R.id.dateTextView)
+        val locationTextView = findViewById<TextView>(R.id.locationTextView)
 
-        requestChatGPT(prompt)
-    }
+        dateTextView.text = "날짜: $date"
+        locationTextView.text = "위치: $location"
 
-    private fun requestChatGPT(prompt: String) {
-        if (isRequestInProgress) {
-            Toast.makeText(this, "잠시만 기다려 주세요...", Toast.LENGTH_SHORT).show()
-            return
-        }
+        // RecyclerView 설정
+        val courseRecyclerView = findViewById<RecyclerView>(R.id.courseRecyclerView)
 
-        isRequestInProgress = true
+        // 첫 3개 코스만 표시하도록 설정
+        val visibleCourses = allCourses.take(3)
 
-        val api = OpenAIClient.instance
-        val request = ChatRequest(
-            messages = listOf(Message("user", prompt))
-        )
+        // Adapter 설정
+        val adapter = CourseAdapter(allCourses, date) // 전체 코스를 전달
+        courseRecyclerView.layoutManager = LinearLayoutManager(this)  // LayoutManager 설정
+        courseRecyclerView.adapter = adapter // Adapter 설정
 
-        val call = api.getChatResponse("Bearer", request)
-
-        call.enqueue(object : Callback<ChatResponse> {
-            override fun onResponse(call: Call<ChatResponse>, response: Response<ChatResponse>) {
-                isRequestInProgress = false // 요청 종료
-
-                if (response.isSuccessful) {
-                    val reply = response.body()?.choices?.get(0)?.message?.content
-                    Log.d("GPT", "답변: $reply")
-                    Toast.makeText(this@HomeActivity, reply, Toast.LENGTH_LONG).show()
-                } else {
-                    Log.e("GPT", "오류 코드: ${response.code()}")
-                    Toast.makeText(this@HomeActivity, "오류 코드: ${response.code()}", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onFailure(call: Call<ChatResponse>, t: Throwable) {
-                isRequestInProgress = false // 요청 종료
-                Log.e("GPT", "실패: ${t.message}")
-                Toast.makeText(this@HomeActivity, "실패: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
+        // 로그로 확인
+        Log.d("HomeActivity", "Visible courses: $visibleCourses")
     }
 }
-

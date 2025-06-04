@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
@@ -16,10 +17,11 @@
         android:textStyle="bold"
         android:textSize="18sp"
         android:drawableStart="@drawable/baseline_location_on_24"
-    android:drawablePadding="8dp"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintStart_toStartOf="parent" />
+        android:drawablePadding="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- 부제목 텍스트 -->
     <TextView
         android:id="@+id/subtitle"
         android:layout_width="wrap_content"
@@ -43,7 +45,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="24dp"/>
 
-    <!-- 더보기 -->
+    <!-- 더보기 버튼 -->
     <Button
         android:id="@+id/seeMore"
         android:layout_width="wrap_content"
@@ -51,11 +53,10 @@
         android:text="더보기"
         android:textSize="14sp"
         android:textColor="#888888"
-        android:background="#00000"
         app:layout_constraintTop_toTopOf="@id/recommendTitle"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- RecyclerView or LinearLayout for 추천 리스트 -->
+    <!-- 추천 리스트 영역 (RecyclerView 포함) -->
     <LinearLayout
         android:id="@+id/recommendList"
         android:layout_width="0dp"
@@ -66,25 +67,66 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- 예시 아이템 -->
-        <include layout="@layout/item_recommend_course"/>
-        <include layout="@layout/item_recommend_course"/>
-        <include layout="@layout/item_recommend_course"/>
+        <!-- 날짜 정보 텍스트 -->
+        <TextView
+            android:id="@+id/dateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="날짜"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- 위치 정보 텍스트 -->
+        <TextView
+            android:id="@+id/locationTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="위치"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
     </LinearLayout>
 
-    <!-- 인기 카테고리 -->
+    <!-- RecyclerView (LocLists 영역) -->
+    <LinearLayout
+        android:id="@+id/LocLists"
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/recommendList"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- RecyclerView 추가 -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/courseRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </LinearLayout>
+
+    <!-- 카테고리 버튼 (LinearLayout 사용) -->
     <TextView
         android:id="@+id/categoryTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="인기 카테고리"
-        android:textStyle="bold"
         android:textSize="16sp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@id/recommendList"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/LocLists"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- 카테고리 버튼 -->
+    <!-- 카테고리 버튼 영역 -->
     <LinearLayout
         android:id="@+id/categoryButtons"
         android:layout_width="0dp"
@@ -98,6 +140,7 @@
         android:weightSum="3">
     </LinearLayout>
 
+    <!-- 하단 네비게이션 바 -->
     <LinearLayout
         android:id="@+id/bottomNav"
         android:layout_width="0dp"
@@ -112,6 +155,7 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
 
+        <!-- 코스 버튼 -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -136,6 +180,7 @@
                 android:textColor="#666" />
         </LinearLayout>
 
+        <!-- 찜목록 버튼 -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -160,6 +205,5 @@
                 android:textColor="#666" />
         </LinearLayout>
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
