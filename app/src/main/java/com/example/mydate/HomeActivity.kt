@@ -16,6 +16,7 @@ class HomeActivity : AppCompatActivity() {
         // 'all_courses' 데이터를 전달받음
         val allCourses = intent.getSerializableExtra("all_courses") as? ArrayList<List<Pair<String, String>>> ?: return
 
+
         val date = intent.getStringExtra("date") ?: ""
         val location = intent.getStringExtra("location") ?: ""
 

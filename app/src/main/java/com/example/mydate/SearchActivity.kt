@@ -9,13 +9,17 @@ import com.example.mydate.data.model.ChatRequest
 import com.example.mydate.data.model.ChatResponse
 import com.example.mydate.data.model.Message
 import com.example.mydate.data.network.OpenAIClient
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 class SearchActivity : AppCompatActivity() {
 
     private var isRequestInProgress = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -49,6 +53,39 @@ class SearchActivity : AppCompatActivity() {
 
         requestChatGPT(prompt,date,location)
     }
+    private fun writeFirebase(CourseList : ArrayList<List<Pair<String, String>>>) {
+            val database = FirebaseFirestore.getInstance()
+            val coursesRef = database.collection("courses")
+
+            // CourseList에서 각 코스를 반복하며 Firebase Firestore에 저장
+            CourseList.forEachIndexed { index, course ->
+                val courseId = "course${index + 1}"  // 고유한 course ID 생성
+
+                // 코스 정보를 Map 형식으로 변환
+                val courseMap = mutableMapOf<String, Any>()
+
+                // 제목, 오전, 점심, 오후, 저녁 정보 추출
+                course.forEach { pair ->
+                    when (pair.first) {
+                        "제목" -> courseMap["title"] = pair.second
+                        "오전" -> courseMap["morning"] = pair.second
+                        "점심" -> courseMap["lunch"] = pair.second
+                        "오후" -> courseMap["afternoon"] = pair.second
+                        "저녁" -> courseMap["evening"] = pair.second
+                    }
+                }
+
+                // Firestore에 데이터 저장
+                coursesRef.document(courseId).set(courseMap)
+                    .addOnSuccessListener {
+                        Log.d("Firebase", "코스 $courseId 저장 성공")
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.e("Firebase", "코스 $courseId 저장 실패", exception)
+                    }
+            }
+        }
+
 
     private fun requestChatGPT(prompt: String, date: String,location:String) {
         if (isRequestInProgress) {
@@ -99,7 +136,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun extractAllCourses(response: String): List<List<Pair<String, String>>> {
-        val courses = mutableListOf<List<Pair<String, String>>>()
+        val courses = ArrayList<List<Pair<String, String>>>()
         val lines = response.lines()
 
         var currentCourse = mutableListOf<Pair<String, String>>()
@@ -135,7 +172,7 @@ class SearchActivity : AppCompatActivity() {
         if (currentCourse.isNotEmpty()) {
             courses.add(currentCourse)
         }
-
+        writeFirebase(courses)
         return courses
     }
 }

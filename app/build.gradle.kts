@@ -41,6 +41,7 @@ android {
 }
 
 dependencies {
+    implementation ("com.google.firebase:firebase-database:20.0.3")
     implementation("com.google.android.gms:play-services-maps:18.1.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -58,6 +59,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.cardview)
+    implementation(libs.firebase.firestore.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
