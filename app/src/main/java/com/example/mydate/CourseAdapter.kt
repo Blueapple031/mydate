@@ -22,13 +22,7 @@ class CourseAdapter(private val courses: List<Course>, private val date: String)
                 if (position != RecyclerView.NO_POSITION) {
                     val course = courses[position]
                     val intent = Intent(itemView.context, MapActivity::class.java)
-                    intent.putExtra("course", ArrayList(listOf(
-                        Pair("제목", course.title),
-                        Pair("오전", course.morning),
-                        Pair("점심", course.lunch),
-                        Pair("오후", course.afternoon),
-                        Pair("저녁", course.evening)
-                    )))
+                    intent.putExtra("course", course)
                     itemView.context.startActivity(intent)
                 }
             }

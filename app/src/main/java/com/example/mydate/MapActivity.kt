@@ -7,43 +7,28 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.mydate.data.GeocodingResponse
-import com.example.mydate.data.GeocodingService
+import com.example.mydate.data.model.Course
 import com.example.mydate.ui.MapUtils
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     private var mMap: GoogleMap? = null
     private val markers = mutableListOf<MarkerOptions>()
     private val LOCATION_PERMISSION_REQUEST = 1
-    private var pendingCourse: List<Pair<String, String>>? = null
-
-    private val geocodingService: GeocodingService by lazy {
-        Retrofit.Builder()
-            .baseUrl("https://maps.googleapis.com/maps/api/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(GeocodingService::class.java)
-    }
+    private var course: Course? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
 
-        // 코스 데이터를 먼저 저장
-        pendingCourse = intent.getSerializableExtra("course") as? List<Pair<String, String>>
+        course = intent.getParcelableExtra("course")
 
-        // 지도 초기화
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -56,7 +41,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         val seoul = LatLng(37.5665, 126.9780)
         mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul, 12f))
 
-        // 위치 권한 확인 및 요청
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED) {
             mMap?.isMyLocationEnabled = true
@@ -68,11 +52,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             )
         }
 
-        // 저장된 코스 데이터가 있다면 처리
-        pendingCourse?.let { course ->
-            processCourseLocations(course)
-            pendingCourse = null
-        }
+        course?.let { processCourse(it) }
     }
 
     override fun onRequestPermissionsResult(
@@ -100,69 +80,56 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun processCourseLocations(course: List<Pair<String, String>>) {
+    private fun processCourse(course: Course) {
         mMap?.let { map ->
             map.clear()
             markers.clear()
 
-            course.forEach { (timeOfDay, location) ->
-                if (timeOfDay != "제목") {
-                    geocodeLocation(location, timeOfDay)
+            // 오전 장소
+            course.morningLatLng?.let { latLng ->
+                addMarker(latLng, "오전", course.morning)
+            }
+
+            // 점심 장소
+            course.lunchLatLng?.let { latLng ->
+                addMarker(latLng, "점심", course.lunch)
+            }
+
+            // 오후 장소
+            course.afternoonLatLng?.let { latLng ->
+                addMarker(latLng, "오후", course.afternoon)
+            }
+
+            // 저녁 장소
+            course.eveningLatLng?.let { latLng ->
+                addMarker(latLng, "저녁", course.evening)
+            }
+
+            // 모든 마커가 보이도록 카메라 이동
+            if (markers.isNotEmpty()) {
+                val builder = LatLngBounds.builder()
+                markers.forEach { marker ->
+                    builder.include(marker.position)
+                }
+                
+                // 마커 주변을 보여주기 위해 패딩 추가
+                val padding = 100 // 패딩 값 (픽셀)
+                map.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), padding))
+                
+                // 경로 그리기
+                if (markers.size >= 2) {
+                    MapUtils.drawRoute(map, markers)
                 }
             }
         }
     }
 
-    private fun geocodeLocation(location: String, timeOfDay: String) {
-        val apiKey = "AIzaSyCAXShO8-9hrp9Gnea3T6voB81WQESYzZM"
-        geocodingService.getLocation(location, apiKey).enqueue(object : Callback<GeocodingResponse> {
-            override fun onResponse(call: Call<GeocodingResponse>, response: Response<GeocodingResponse>) {
-                if (response.isSuccessful) {
-                    val result = response.body()?.results?.firstOrNull()
-                    if (result != null) {
-                        val lat = result.geometry.location.lat
-                        val lng = result.geometry.location.lng
-                        val latLng = LatLng(lat, lng)
-
-                        val marker = MarkerOptions()
-                            .position(latLng)
-                            .title("$timeOfDay: $location")
-                        markers.add(marker)
-                        mMap?.addMarker(marker)
-
-                        if (markers.size == 4) {
-                            mMap?.let { map ->
-                                MapUtils.drawRoute(map, markers)
-                            }
-                        }
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<GeocodingResponse>, t: Throwable) {
-                Toast.makeText(
-                    this@MapActivity,
-                    "위치 정보를 가져오는데 실패했습니다: ${t.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        })
+    private fun addMarker(latLng: LatLng, timeOfDay: String, location: String) {
+        val marker = MarkerOptions()
+            .position(latLng)
+            .title("$timeOfDay: $location")
+            .snippet("클릭하여 상세 정보 확인")
+        markers.add(marker)
+        mMap?.addMarker(marker)
     }
 }
-
-data class GeocodingResponse(
-    val results: List<GeocodingResult>
-)
-
-data class GeocodingResult(
-    val geometry: Geometry
-)
-
-data class Geometry(
-    val location: Location
-)
-
-data class Location(
-    val lat: Double,
-    val lng: Double
-)
