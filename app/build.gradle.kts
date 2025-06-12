@@ -41,8 +41,13 @@ android {
 }
 
 dependencies {
+    implementation ("org.apache.commons:commons-math3:3.6.1")
+    implementation("org.tensorflow:tensorflow-lite:2.7.0")
+    implementation("org.tensorflow:tensorflow-lite-support:0.3.0")
+
     implementation ("com.google.firebase:firebase-database:20.0.3")
     implementation("com.google.android.gms:play-services-maps:18.1.0")
+
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")

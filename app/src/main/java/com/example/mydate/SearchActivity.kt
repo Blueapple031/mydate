@@ -48,7 +48,7 @@ class SearchActivity : AppCompatActivity() {
             오후: 장소 이름, 위치
             저녁: 장소 이름, 위치
         
-            5개의 코스를 각각 나열하고, 각 코스의 장소와 위치를 정확하게 제시해줘.
+            5개의 코스를 각각 한글로만 나열하고 출력 형식을 무조건 준수하고, 각 코스의 장소와 위치를 정확하게 제시해줘.
             """.trimIndent()
 
         requestChatGPT(prompt,date,location)
@@ -75,7 +75,7 @@ class SearchActivity : AppCompatActivity() {
                     }
                 }
 
-                // Firestore에 데이터 저장
+
                 coursesRef.document(courseId).set(courseMap)
                     .addOnSuccessListener {
                         Log.d("Firebase", "코스 $courseId 저장 성공")
@@ -100,6 +100,7 @@ class SearchActivity : AppCompatActivity() {
             messages = listOf(Message("user", prompt))
         )
 
+
         val call = api.getChatResponse("Bearer ", request)
 
         call.enqueue(object : Callback<ChatResponse> {
@@ -113,10 +114,11 @@ class SearchActivity : AppCompatActivity() {
                     if (reply != null) {
                         val allCourses = extractAllCourses(reply)
                         val intent = Intent(this@SearchActivity, HomeActivity::class.java)
+                        intent.putExtra("chatgpt",reply)
                         intent.putExtra("all_courses", ArrayList(allCourses))
                         intent.putExtra("location", location)
                         intent.putExtra("date", date)
-
+                        intent.putExtra("chatGPTResponse", reply)
                         startActivity(intent)
                     } else {
                         Toast.makeText(this@SearchActivity, "답변이 없습니다.", Toast.LENGTH_SHORT).show()
@@ -146,7 +148,7 @@ class SearchActivity : AppCompatActivity() {
 
             // 제목을 찾은 경우
             if (line.startsWith("1.") || line.startsWith("2.") || line.startsWith("3.") || line.startsWith("4.") || line.startsWith("5.")) {
-                // 이미 있는 코스가 있다면 추가 후 새 코스를 시작
+
                 if (currentCourse.isNotEmpty()) {
                     courses.add(currentCourse)
                 }
