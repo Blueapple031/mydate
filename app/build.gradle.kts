@@ -24,7 +24,7 @@ android {
         if (localPropertiesFile.exists()) {
             properties.load(localPropertiesFile.inputStream())
         }
-        buildConfigField("String", "API_KEY", properties.getProperty("apiKey", "\"\""))
+        buildConfigField("String", "OPENAI_API_KEY", properties.getProperty("apiKey", "\"\""))
     }
 
     buildTypes {

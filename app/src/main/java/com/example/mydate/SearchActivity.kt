@@ -49,7 +49,13 @@ class SearchActivity : AppCompatActivity() {
             저녁: 장소 이름, 위치
         
             5개의 코스를 각각 나열하고, 각 코스의 장소와 위치를 정확하게 제시해줘.
+            
+            다음은 실제 예시이다.
+            -----------------
+            -----------------
+           
             """.trimIndent()
+        //TODO 실제 예시 5가지 넣어놓기
 
         requestChatGPT(prompt,date,location)
     }

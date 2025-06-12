@@ -11,7 +11,7 @@ import retrofit2.Response
 
 class ChatGPTRepository {
     private val api = OpenAIClient.instance
-    private val apiKey = BuildConfig.API_KEY
+    private val apiKey = BuildConfig.OPENAI_API_KEY
 
     fun requestChatGPT(
         prompt: String,
