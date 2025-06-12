@@ -6,6 +6,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mydate.data.model.Course
+
+private const val TAG = "HomeActivity"
 
 class HomeActivity : AppCompatActivity() {
 
@@ -14,8 +17,11 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
 
         // 'all_courses' 데이터를 전달받음
-        val allCourses = intent.getSerializableExtra("all_courses") as? ArrayList<List<Pair<String, String>>> ?: return
-
+        @Suppress("DEPRECATION")
+        val allCourses = intent.getParcelableArrayListExtra<Course>("all_courses") ?: return
+        allCourses.forEach {
+            Log.d(TAG, "onCreate: allCourses = ${it}")
+        }
 
         val date = intent.getStringExtra("date") ?: ""
         val location = intent.getStringExtra("location") ?: ""
