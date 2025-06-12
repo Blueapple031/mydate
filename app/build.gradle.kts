@@ -17,6 +17,14 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // local.properties에서 API 키를 가져옵니다
+        val properties = org.jetbrains.kotlin.konan.properties.Properties()
+        val localPropertiesFile = project.rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            properties.load(localPropertiesFile.inputStream())
+        }
+        buildConfigField("String", "API_KEY", properties.getProperty("apiKey", "\"\""))
     }
 
     buildTypes {
@@ -26,6 +34,12 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "API_BASE_URL", "\"https://api.example.com/\"")
+            buildConfigField("boolean", "ENABLE_LOGGING", "false")
+        }
+        debug {
+            buildConfigField("String", "API_BASE_URL", "\"https://dev-api.example.com/\"")
+            buildConfigField("boolean", "ENABLE_LOGGING", "true")
         }
     }
     compileOptions {
@@ -37,6 +51,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
