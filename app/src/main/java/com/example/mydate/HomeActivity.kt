@@ -6,7 +6,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import java.util.Arrays
+import com.example.mydate.data.model.Course
+
+private const val TAG = "HomeActivity"
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var keywordExtractor: KeywordExtractor
@@ -15,8 +17,11 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
 
         // 'all_courses' 데이터를 전달받음
-        val allCourses = intent.getSerializableExtra("all_courses") as? ArrayList<List<Pair<String, String>>> ?: return
-
+        @Suppress("DEPRECATION")
+        val allCourses = intent.getParcelableArrayListExtra<Course>("all_courses") ?: return
+        allCourses.forEach {
+            Log.d(TAG, "onCreate: allCourses = ${it}")
+        }
 
         val date = intent.getStringExtra("date") ?: ""
         val location = intent.getStringExtra("location") ?: ""
@@ -39,33 +44,34 @@ class HomeActivity : AppCompatActivity() {
         courseRecyclerView.layoutManager = LinearLayoutManager(this)  // LayoutManager 설정
         courseRecyclerView.adapter = adapter // Adapter 설정
 
-        // 로그로 확인
+
         Log.d("HomeActivity", "Visible courses: $visibleCourses")
 
         keywordExtractor = KeywordExtractor()
         keywordExtractor.loadModel(applicationContext)
 
-        val stringBuilder = StringBuilder() // StringBuilder 객체를 사용하여 문자열 생성
+        val stringBuilder = StringBuilder()
 
-        for (date in visibleCourses) {
-            for (pair in date) {
-                if(pair.first == "제목"){
-                    continue
-                }
-                if (pair.second.contains(",")) {
-                    val items = pair.second.split(",")
-                    for (item in items) {
-                        stringBuilder.append(item.trim())
-                        stringBuilder.append(" ")  // 공백 추가
-                    }
-                } else {
-                    // 숫자도 아니고 쉼표도 없는 경우 그대로 추가
-                    stringBuilder.append(pair.second)
-                    stringBuilder.append(" ")
-                }
+        for (course in allCourses) {
+            // morning, lunch, afternoon, evening 값을 쉼표(,)로 나눠서 처리
+            course.morning.split(",").forEach {
+                stringBuilder.append(it.trim())  // trim()을 사용하여 공백을 제거한 후 추가
+                stringBuilder.append(" ")  // 공백 추가
+            }
+            course.lunch.split(",").forEach {
+                stringBuilder.append(it.trim())
+                stringBuilder.append(" ")
+            }
+            course.afternoon.split(",").forEach {
+                stringBuilder.append(it.trim())
+                stringBuilder.append(" ")
+            }
+            course.evening.split(",").forEach {
+                stringBuilder.append(it.trim())
+                stringBuilder.append(" ")
             }
         }
-
+        Log.d("CourseString", stringBuilder.toString())
         val text = stringBuilder.toString()
 
         Log.d("text",text)
@@ -87,4 +93,6 @@ class HomeActivity : AppCompatActivity() {
         val temp= keywordtext.toString()
         resultTextView.text = temp
     }
+
+
 }

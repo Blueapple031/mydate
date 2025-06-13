@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-    <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyCAXShO8-9hrp9Gnea3T6voB81WQESYzZM"/>
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.mydate">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -18,9 +18,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCAXShO8-9hrp9Gnea3T6voB81WQESYzZM"/>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +35,7 @@
         </activity>
         <activity android:name=".SearchActivity"/>
         <activity android:name=".HomeActivity"/>
-
+        <activity android:name=".MapActivity"/>
     </application>
 
 </manifest>
