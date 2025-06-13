@@ -24,7 +24,10 @@ class CourseAdapter(private val courses: List<Course>, private val date: String)
         val afternoonLocation: TextView = itemView.findViewById(R.id.afternoonLocation)
         val eveningLocation: TextView = itemView.findViewById(R.id.eveningLocation)
         val favoriteButton: ImageView = itemView.findViewById(R.id.favoriteButton)
+        val detailButton: TextView = itemView.findViewById(R.id.detailButton)
+        val detailLayout: View = itemView.findViewById(R.id.detailLayout)
         var course: Course? = null
+        var isDetailVisible = false
 
         init {
             favoriteButton.setOnClickListener {
@@ -40,6 +43,13 @@ class CourseAdapter(private val courses: List<Course>, private val date: String)
                     }
                 }
             }
+
+            detailButton.setOnClickListener {
+                isDetailVisible = !isDetailVisible
+                detailLayout.visibility = if (isDetailVisible) View.VISIBLE else View.GONE
+                detailButton.text = if (isDetailVisible) "접기" else "자세히 보기"
+            }
+
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
@@ -112,6 +122,11 @@ class CourseAdapter(private val courses: List<Course>, private val date: String)
         } else {
             holder.favoriteButton.setImageResource(R.drawable.baseline_favorite_border_24)
         }
+
+        // 상세 정보 초기 상태 설정
+        holder.isDetailVisible = false
+        holder.detailLayout.visibility = View.GONE
+        holder.detailButton.text = "자세히 보기"
     }
 
     override fun getItemCount(): Int {
