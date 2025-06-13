@@ -29,7 +29,8 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        setContentView(R.layout.activity_loading)
+
 
         val location = intent?.getStringExtra("location") ?: ""
         val date = intent?.getStringExtra("date") ?: ""
@@ -85,6 +86,10 @@ class SearchActivity : AppCompatActivity() {
             onError = { error ->
                 isRequestInProgress = false
                 Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
             }
         )
     }
