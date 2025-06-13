@@ -66,7 +66,7 @@ class KeywordExtractor {
     private fun extractKeywordsFromText(text: String): List<String> {
         val words = text.split("\\s+".toRegex())
         val filteredWords = words.filter { word ->
-            word.length > 1 && !word.matches("\\d+".toRegex())  // 길이가 1 이상이고 숫자가 아니면 포함
+            word.length > 1 && !word.matches("\\d+.*".toRegex())  // 길이가 1 이상이고 숫자가 아니면 포함
         }
 
         val stopwords = setOf("느끼기","속에서", '1', '2', '3', '4', '5', '6', '7', '8', '9', '0') // 예시 불용어

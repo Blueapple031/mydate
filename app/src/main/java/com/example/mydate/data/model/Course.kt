@@ -14,7 +14,8 @@ data class Course(
     val morningLatLng: LatLng? = null,
     val lunchLatLng: LatLng? = null,
     val afternoonLatLng: LatLng? = null,
-    val eveningLatLng: LatLng? = null
+    val eveningLatLng: LatLng? = null,
+    var isFavorite: Boolean = false
 ) : Parcelable {
     companion object {
         fun fromPairs(pairs: List<Pair<String, String>>): Course {

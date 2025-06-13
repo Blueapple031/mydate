@@ -31,7 +31,7 @@ class HomeActivity : AppCompatActivity() {
 
         setupRecyclerView(allCourses, date)
         updateLocationInfo(date, location)
-        
+
         keywordExtractor = KeywordExtractor()
         keywordExtractor.loadModel(applicationContext)
     }
@@ -39,7 +39,7 @@ class HomeActivity : AppCompatActivity() {
     private fun setupRecyclerView(courses: ArrayList<Course>, date: String) {
         val courseRecyclerView = findViewById<RecyclerView>(R.id.courseRecyclerView)
         val visibleCourses = courses.take(MAX_VISIBLE_COURSES)
-        
+
         val adapter = CourseAdapter(courses, date)
         courseRecyclerView.layoutManager = LinearLayoutManager(this)
         courseRecyclerView.adapter = adapter
@@ -55,11 +55,11 @@ class HomeActivity : AppCompatActivity() {
     private fun processKeywords() {
         val visibleCourses = intent.getParcelableArrayListExtra<Course>("all_courses")?.take(MAX_VISIBLE_COURSES) ?: return
         val text = buildCourseText(visibleCourses)
-        
+
         Log.d(TAG, "Processed text: $text")
         val keywords = keywordExtractor.predict(text)
         Log.d(TAG, "Extracted keywords: ${keywords.joinToString(", ")}")
-        
+
         displayKeywords(keywords)
     }
 
@@ -69,7 +69,7 @@ class HomeActivity : AppCompatActivity() {
                 val courseMap = course.toMap()
                 courseMap.forEach { (key, value) ->
                     if (key == "title") return@forEach
-                    
+
                     if (value is String && value.contains(",")) {
                         value.split(",").forEach { item ->
                             append(item.trim())
@@ -93,7 +93,7 @@ class HomeActivity : AppCompatActivity() {
                 append("   ")
             }
         }.toString()
-        
+
         resultTextView.text = keywordText
     }
 }
