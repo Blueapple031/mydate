@@ -1,7 +1,9 @@
 package com.example.mydate
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -95,5 +97,10 @@ class HomeActivity : AppCompatActivity() {
         }.toString()
 
         resultTextView.text = keywordText
+    }
+
+    fun onClickBookmark(view: View) {
+        val intent = Intent(this, BookmarkActivity::class.java)
+        startActivity(intent)
     }
 }

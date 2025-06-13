@@ -1,5 +1,6 @@
 package com.example.mydate
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -17,24 +18,26 @@ class CourseAdapter(private val courses: List<Course>, private val date: String)
 
     // ViewHolder 클래스 정의
     inner class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val courseNameTextView: TextView = itemView.findViewById(R.id.courseNameTextView)
-        val courseLocationTextView: TextView = itemView.findViewById(R.id.courseLocationTextView)
-        val courseDateTextView: TextView = itemView.findViewById(R.id.courseDateTextView)
-        val heartImageView: ImageView = itemView.findViewById(R.id.heartImageView)
+        val courseTitle: TextView = itemView.findViewById(R.id.courseTitle)
+        val morningLocation: TextView = itemView.findViewById(R.id.morningLocation)
+        val lunchLocation: TextView = itemView.findViewById(R.id.lunchLocation)
+        val afternoonLocation: TextView = itemView.findViewById(R.id.afternoonLocation)
+        val eveningLocation: TextView = itemView.findViewById(R.id.eveningLocation)
+        val favoriteButton: ImageView = itemView.findViewById(R.id.favoriteButton)
         var course: Course? = null
 
         init {
-            heartImageView.setOnClickListener {
-                course?.isFavorite = !(course?.isFavorite ?: false)
-
-                // Firestore에서 찜 상태 업데이트
-
-                updateCourseInDatabase(course)
-                if (course?.isFavorite == true) {
-                    heartImageView.setImageResource(android.R.drawable.btn_star_big_on) // 빨간색 하트
-
-                } else {
-                    heartImageView.setImageResource(android.R.drawable.btn_star_big_off) // 빈 하트
+            favoriteButton.setOnClickListener {
+                course?.let { currentCourse ->
+                    if (currentCourse.isFavorite) {
+                        // 찜 취소 시 확인 대화상자 표시
+                        showUnfavoriteConfirmationDialog(currentCourse)
+                    } else {
+                        // 찜하기
+                        currentCourse.isFavorite = true
+                        updateCourseInDatabase(currentCourse)
+                        favoriteButton.setImageResource(R.drawable.baseline_favorite_24)
+                    }
                 }
             }
             itemView.setOnClickListener {
@@ -46,6 +49,19 @@ class CourseAdapter(private val courses: List<Course>, private val date: String)
                     itemView.context.startActivity(intent)
                 }
             }
+        }
+
+        private fun showUnfavoriteConfirmationDialog(course: Course) {
+            AlertDialog.Builder(itemView.context)
+                .setTitle("찜 취소")
+                .setMessage("찜 목록에서 삭제하시겠습니까?")
+                .setPositiveButton("예") { _, _ ->
+                    course.isFavorite = false
+                    updateCourseInDatabase(course)
+                    favoriteButton.setImageResource(R.drawable.baseline_favorite_border_24)
+                }
+                .setNegativeButton("아니오", null)
+                .show()
         }
     }
     private fun updateCourseInDatabase(course: Course?) {
@@ -86,13 +102,15 @@ class CourseAdapter(private val courses: List<Course>, private val date: String)
         val course = courses[position]
         holder.course = course
         // 제목, 위치, 날짜를 TextView에 바인딩
-        holder.courseNameTextView.text = course.title
-        holder.courseLocationTextView.text = course.morning
-        holder.courseDateTextView.text = date
+        holder.courseTitle.text = course.title
+        holder.morningLocation.text = course.morning
+        holder.lunchLocation.text = course.lunch
+        holder.afternoonLocation.text = course.afternoon
+        holder.eveningLocation.text = course.evening
         if (course.isFavorite) {
-            holder.heartImageView.setImageResource(android.R.drawable.btn_star_big_on)  // 빨간색 하트
+            holder.favoriteButton.setImageResource(R.drawable.baseline_favorite_24)
         } else {
-            holder.heartImageView.setImageResource(android.R.drawable.btn_star_big_off)  // 빈 하트
+            holder.favoriteButton.setImageResource(R.drawable.baseline_favorite_border_24)
         }
     }
 

@@ -37,6 +37,7 @@
         <activity android:name=".SearchActivity"/>
         <activity android:name=".HomeActivity"/>
         <activity android:name=".MapActivity"/>
+        <activity android:name=".BookmarkActivity" />
     </application>
 
 </manifest>

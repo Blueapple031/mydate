@@ -80,6 +80,33 @@ data class Course(
                 Pair(value.trim(), null)
             }
         }
+
+        fun fromMap(map: Map<String, Any>): Course {
+            return Course(
+                title = map["title"] as String,
+                morning = map["morning"] as String,
+                lunch = map["lunch"] as String,
+                afternoon = map["afternoon"] as String,
+                evening = map["evening"] as String,
+                morningLatLng = parseLatLng(map["morningLatLng"] as String),
+                lunchLatLng = parseLatLng(map["lunchLatLng"] as String),
+                afternoonLatLng = parseLatLng(map["afternoonLatLng"] as String),
+                eveningLatLng = parseLatLng(map["eveningLatLng"] as String),
+                isFavorite = map["isFavorite"] as? Boolean ?: false
+            )
+        }
+
+        private fun parseLatLng(latLngStr: String): LatLng? {
+            if (latLngStr.isEmpty()) return null
+            val parts = latLngStr.split(",")
+            return if (parts.size == 2) {
+                try {
+                    LatLng(parts[0].toDouble(), parts[1].toDouble())
+                } catch (e: NumberFormatException) {
+                    null
+                }
+            } else null
+        }
     }
 
     fun toMap(): Map<String, Any> = mapOf(
@@ -91,6 +118,7 @@ data class Course(
         "morningLatLng" to (morningLatLng?.let { "${it.latitude},${it.longitude}" } ?: ""),
         "lunchLatLng" to (lunchLatLng?.let { "${it.latitude},${it.longitude}" } ?: ""),
         "afternoonLatLng" to (afternoonLatLng?.let { "${it.latitude},${it.longitude}" } ?: ""),
-        "eveningLatLng" to (eveningLatLng?.let { "${it.latitude},${it.longitude}" } ?: "")
+        "eveningLatLng" to (eveningLatLng?.let { "${it.latitude},${it.longitude}" } ?: ""),
+        "isFavorite" to isFavorite
     )
 }

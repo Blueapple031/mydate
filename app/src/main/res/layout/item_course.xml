@@ -1,73 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:elevation="4dp">
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="5dp">
+        android:padding="16dp">
 
-    <!-- 제목 및 하트 아이콘을 담을 LinearLayout (수평 배치) -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical|end">
-
-        <!-- 제목 텍스트 -->
-        <TextView
-            android:id="@+id/courseNameTextView"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="데이트 코스 제목"
-            android:textSize="18sp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/courseTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#333333"/>
+
+            <ImageButton
+                android:id="@+id/favoriteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="8dp"
+                android:src="@drawable/baseline_favorite_border_24"
+                android:contentDescription="찜하기"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="오전"
             android:textStyle="bold"
-            android:layout_marginLeft="7dp"/>
+            android:layout_marginTop="8dp"/>
 
-        <!-- 찜할 수 있는 하트 아이콘 -->
-        <ImageView
-            android:id="@+id/heartImageView"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="8dp"
-            android:src="@android:drawable/btn_star_big_off"
-            android:contentDescription="찜하기 버튼"/>
-
-    </LinearLayout>
-
-    <!-- 장소 및 날짜 텍스트를 담을 LinearLayout (세로 배치) -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <!-- 장소 텍스트 -->
         <TextView
-            android:id="@+id/courseLocationTextView"
+            android:id="@+id/morningLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:layout_marginStart="8dp"/>
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="장소: 서울 강남구"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="14sp"
-            android:layout_marginLeft="7dp"/>
+            android:text="점심"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"/>
 
-        <!-- 날짜 텍스트 -->
         <TextView
-            android:id="@+id/courseDateTextView"
+            android:id="@+id/lunchLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:layout_marginStart="8dp"/>
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="날짜: 2023.11.15"
+            android:text="오후"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/afternoonLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:textSize="14sp"
-            android:textColor="@android:color/darker_gray"
-            android:layout_marginLeft="7dp"/>
+            android:layout_marginStart="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="저녁"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/eveningLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:layout_marginStart="8dp"/>
 
     </LinearLayout>
-
-</LinearLayout>
-
-    </androidx.cardview.widget.CardView>
+</androidx.cardview.widget.CardView>
