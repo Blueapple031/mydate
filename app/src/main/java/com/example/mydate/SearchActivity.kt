@@ -30,7 +30,7 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loading)
-
+        supportActionBar?.hide()
 
         val location = intent?.getStringExtra("location") ?: ""
         val date = intent?.getStringExtra("date") ?: ""

@@ -19,6 +19,7 @@ class BookmarkActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bookmark)
+        supportActionBar?.hide()
 
         recyclerView = findViewById(R.id.bookmarkRecyclerView)
         emptyView = findViewById(R.id.emptyView)

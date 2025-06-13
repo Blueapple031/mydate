@@ -9,17 +9,32 @@
     android:background="#FFFFFF">
 
     <!-- 상단 타이틀 -->
-    <TextView
+    <LinearLayout
         android:id="@+id/title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="데이트코스"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:drawableStart="@drawable/baseline_location_on_24"
-        android:drawablePadding="8dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical|center_horizontal"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MyDate"
+            android:textSize="30sp"
+            android:textAlignment="center"
+            android:paddingStart="8dp" />
+    </LinearLayout>
 
     <!-- 부제목 텍스트 -->
     <TextView

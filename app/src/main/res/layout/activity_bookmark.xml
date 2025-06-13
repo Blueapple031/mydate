@@ -8,9 +8,35 @@
     android:padding="16dp"
     android:background="#FFFFFF">
 
-    <!-- 상단 타이틀 -->
-    <TextView
+    <LinearLayout
         android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical|center_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MyDate"
+            android:textSize="30sp"
+            android:textAlignment="center"
+            android:paddingStart="8dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/goodlist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="찜 목록"
@@ -18,7 +44,7 @@
         android:textSize="18sp"
         android:drawableStart="@drawable/baseline_thumb_up_24"
         android:drawablePadding="8dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title"
         app:layout_constraintStart_toStartOf="parent" />
 
     <!-- RecyclerView -->
@@ -27,7 +53,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/title"
+        android:contentDescription="찜한 데이트 코스 목록"
+        app:layout_constraintTop_toBottomOf="@id/goodlist"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

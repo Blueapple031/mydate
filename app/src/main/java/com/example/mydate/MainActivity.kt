@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        supportActionBar?.hide()
         val locationInput = findViewById<EditText>(R.id.editTextLocation)
         editTextDate = findViewById(R.id.editTextDate)
         val preferenceInput = findViewById<EditText>(R.id.editTextPreference)
