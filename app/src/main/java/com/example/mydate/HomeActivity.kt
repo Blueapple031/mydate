@@ -6,12 +6,13 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.util.Arrays
 import com.example.mydate.data.model.Course
 
 private const val TAG = "HomeActivity"
 
 class HomeActivity : AppCompatActivity() {
-
+    private lateinit var keywordExtractor: KeywordExtractor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -46,5 +47,50 @@ class HomeActivity : AppCompatActivity() {
 
         // 로그로 확인
         Log.d("HomeActivity", "Visible courses: $visibleCourses")
+
+        keywordExtractor = KeywordExtractor()
+        keywordExtractor.loadModel(applicationContext)
+
+        val stringBuilder = StringBuilder() // StringBuilder 객체를 사용하여 문자열 생성
+
+        for (date in visibleCourses) {
+            for (pair in date) {
+                if(pair.first == "제목"){
+                    continue
+                }
+                if (pair.second.contains(",")) {
+                    val items = pair.second.split(",")
+                    for (item in items) {
+                        stringBuilder.append(item.trim())
+                        stringBuilder.append(" ")  // 공백 추가
+                    }
+                } else {
+                    // 숫자도 아니고 쉼표도 없는 경우 그대로 추가
+                    stringBuilder.append(pair.second)
+                    stringBuilder.append(" ")
+                }
+            }
+        }
+
+        val text = stringBuilder.toString()
+
+        Log.d("text",text)
+        val result = keywordExtractor.predict(text)
+        Log.d("KeywordExtractor", "추출된 키워드: ${result.joinToString(", ")}")
+        val resultTextView = findViewById<TextView>(R.id.resultTextView)
+
+        val keywordtext = StringBuilder()
+        var cnt = 1
+        for(keyword in result){
+            keywordtext.append(cnt)
+            keywordtext.append(". ")
+            keywordtext.append(keyword)
+            keywordtext.append("   ")
+            cnt+=1
+            if( cnt ==4)
+                break
+        }
+        val temp= keywordtext.toString()
+        resultTextView.text = temp
     }
 }

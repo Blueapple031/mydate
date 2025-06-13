@@ -1,5 +1,3 @@
-import org.gradle.kotlin.dsl.test
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -53,6 +51,13 @@ android {
 }
 
 dependencies {
+    implementation ("org.apache.commons:commons-math3:3.6.1")
+    implementation("org.tensorflow:tensorflow-lite:2.7.0")
+    implementation("org.tensorflow:tensorflow-lite-support:0.3.0")
+
+    implementation ("com.google.firebase:firebase-database:20.0.3")
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
+
     implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("com.google.android.gms:play-services-location:21.2.0")
     implementation("com.google.maps.android:android-maps-utils:3.8.0")

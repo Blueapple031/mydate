@@ -1,0 +1,36 @@
+[33mcommit 07ad2e3be7d3fe389b7cdc9378334e2d4c7f4b93[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: 도균 <do6065@pusan.ac.kr>
+Date:   Fri Jun 13 01:42:35 2025 +0900
+
+    Mearchine Learning
+
+[33mcommit ca31246a3b7f8e4ff38b862de47629e0b8cb881f[m
+Author: 도균 <do6065@pusan.ac.kr>
+Date:   Fri Jun 13 01:36:50 2025 +0900
+
+    B
+    ML
+
+[33mcommit a98cccfc0f7655cf6c18c1dc635abbd5236307db[m
+Author: 도균 <do6065@pusan.ac.kr>
+Date:   Fri Jun 13 01:35:18 2025 +0900
+
+    machineLearning
+
+[33mcommit f4a0ae0c6014da0f230056f0f1bc9412bc3730dc[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: 도균 <do6065@pusan.ac.kr>
+Date:   Fri Jun 6 03:54:48 2025 +0900
+
+    db connect/save
+
+[33mcommit 737d1f58d4753c6ec56f06be3bcee1cabc5b27da[m
+Author: 도균 <do6065@pusan.ac.kr>
+Date:   Thu Jun 5 00:11:19 2025 +0900
+
+    activity_home - recyclerview
+
+[33mcommit 0e955253f0f5a64be7a3b810b2ff531c9f588f82[m
+Author: 도균 <do6065@pusan.ac.kr>
+Date:   Mon May 26 19:15:57 2025 +0900
+
+    chat gpt api connect

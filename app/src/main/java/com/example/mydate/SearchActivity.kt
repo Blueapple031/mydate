@@ -8,8 +8,21 @@ import com.example.mydate.data.model.Course
 import com.example.mydate.data.repository.ChatGPTRepository
 import com.example.mydate.data.repository.CourseRepository
 import com.example.mydate.util.CourseExtractor
+import com.example.mydate.data.model.ChatRequest
+import com.example.mydate.data.model.ChatResponse
+import com.example.mydate.data.model.Message
+import com.example.mydate.data.network.OpenAIClient
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SearchActivity : AppCompatActivity() {
+
     private var isRequestInProgress = false
     private val chatGPTRepository = ChatGPTRepository()
     private val courseRepository = CourseRepository()
@@ -22,6 +35,7 @@ class SearchActivity : AppCompatActivity() {
         val date = intent?.getStringExtra("date") ?: ""
         val preference = intent?.getStringExtra("preference") ?: ""
 
+        // Intent 값이 제대로 전달되지 않으면 예외 처리
         if (location.isEmpty() || date.isEmpty() || preference.isEmpty()) {
             Toast.makeText(this, "필요한 데이터가 없습니다.", Toast.LENGTH_SHORT).show()
             return
