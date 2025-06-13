@@ -11,7 +11,7 @@ import com.example.mydate.data.model.Course
 private const val TAG = "HomeActivity"
 
 class HomeActivity : AppCompatActivity() {
-
+    private lateinit var keywordExtractor: KeywordExtractor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -44,7 +44,55 @@ class HomeActivity : AppCompatActivity() {
         courseRecyclerView.layoutManager = LinearLayoutManager(this)  // LayoutManager 설정
         courseRecyclerView.adapter = adapter // Adapter 설정
 
-        // 로그로 확인
+
         Log.d("HomeActivity", "Visible courses: $visibleCourses")
+
+        keywordExtractor = KeywordExtractor()
+        keywordExtractor.loadModel(applicationContext)
+
+        val stringBuilder = StringBuilder()
+
+        for (course in allCourses) {
+            // morning, lunch, afternoon, evening 값을 쉼표(,)로 나눠서 처리
+            course.morning.split(",").forEach {
+                stringBuilder.append(it.trim())  // trim()을 사용하여 공백을 제거한 후 추가
+                stringBuilder.append(" ")  // 공백 추가
+            }
+            course.lunch.split(",").forEach {
+                stringBuilder.append(it.trim())
+                stringBuilder.append(" ")
+            }
+            course.afternoon.split(",").forEach {
+                stringBuilder.append(it.trim())
+                stringBuilder.append(" ")
+            }
+            course.evening.split(",").forEach {
+                stringBuilder.append(it.trim())
+                stringBuilder.append(" ")
+            }
+        }
+        Log.d("CourseString", stringBuilder.toString())
+        val text = stringBuilder.toString()
+
+        Log.d("text",text)
+        val result = keywordExtractor.predict(text)
+        Log.d("KeywordExtractor", "추출된 키워드: ${result.joinToString(", ")}")
+        val resultTextView = findViewById<TextView>(R.id.resultTextView)
+
+        val keywordtext = StringBuilder()
+        var cnt = 1
+        for(keyword in result){
+            keywordtext.append(cnt)
+            keywordtext.append(". ")
+            keywordtext.append(keyword)
+            keywordtext.append("   ")
+            cnt+=1
+            if( cnt ==4)
+                break
+        }
+        val temp= keywordtext.toString()
+        resultTextView.text = temp
     }
+
+
 }
