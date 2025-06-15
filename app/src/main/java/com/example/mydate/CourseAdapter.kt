@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mydate.data.model.Course
 import android.util.Log
+import android.widget.Button
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 
@@ -26,6 +27,7 @@ class CourseAdapter(private val courses: List<Course>, private val date: String)
         val favoriteButton: ImageView = itemView.findViewById(R.id.favoriteButton)
         val detailButton: TextView = itemView.findViewById(R.id.detailButton)
         val detailLayout: View = itemView.findViewById(R.id.detailLayout)
+        val shareButton: Button = itemView.findViewById(R.id.shareButton)
         var course: Course? = null
         var isDetailVisible = false
 
@@ -59,6 +61,19 @@ class CourseAdapter(private val courses: List<Course>, private val date: String)
                     itemView.context.startActivity(intent)
                 }
             }
+            shareButton.setOnClickListener {
+                // 공유할 텍스트
+                val message = "${course?.title} 데이트 어때요?\n${course?.morning}\n${course?.lunch}\n${course?.afternoon}\n${course?.evening}"
+
+                // 공유할 인텐트 생성
+                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"  // 공유할 데이터의 타입 설정
+                    putExtra(Intent.EXTRA_TEXT, message)  // 공유할 텍스트 추가
+                }
+
+                itemView.context.startActivity(Intent.createChooser(shareIntent, "공유할 앱 선택"))
+            }
+
         }
 
         private fun showUnfavoriteConfirmationDialog(course: Course) {

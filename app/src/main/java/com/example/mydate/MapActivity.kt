@@ -16,6 +16,17 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
+import android.content.ContentValues
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import android.view.View
+import android.widget.ImageButton
+import java.io.IOException
+import java.io.OutputStream
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     private var mMap: GoogleMap? = null
@@ -26,12 +37,21 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
+        val captureButton: ImageButton = findViewById(R.id.captureButton)
         supportActionBar?.hide()
         course = intent.getParcelableExtra("course")
 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        captureButton.setOnClickListener {
+            val rootView = findViewById<View>(R.id.map) // 캡처할 뷰 (예: 지도 화면)
+            val bitmap = captureScreen(rootView) // 화면을 캡처한 Bitmap
+
+            // 갤러리에 이미지 저장
+            saveImageToGallery(bitmap, this)
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -131,5 +151,66 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             .snippet("클릭하여 상세 정보 확인")
         markers.add(marker)
         mMap?.addMarker(marker)
+    }
+
+    private fun captureScreen(view: View): Bitmap {
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        view.draw(canvas)  // 화면을 Bitmap으로 변환
+        return bitmap
+    }
+
+    // 갤러리에 이미지 저장
+    private fun saveImageToGallery(bitmap: Bitmap, context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // 안드로이드 10 (API 29) 이상에서는 MediaStore를 사용하여 저장
+            val contentValues = ContentValues().apply {
+                put(MediaStore.Images.Media.DISPLAY_NAME, "captured_image.png") // 파일 이름
+                put(MediaStore.Images.Media.MIME_TYPE, "image/png") // MIME 타입
+                put(
+                    MediaStore.Images.Media.RELATIVE_PATH,
+                    "Pictures/MyApp"
+                ) // 저장할 폴더 (Pictures/앱 이름)
+            }
+
+            val contentUri: Uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            val imageUri: Uri? = context.contentResolver.insert(contentUri, contentValues)
+
+            if (imageUri != null) {
+                try {
+                    val outputStream: OutputStream? =
+                        context.contentResolver.openOutputStream(imageUri)
+                    outputStream?.let {
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) // PNG 형식으로 저장
+                        it.close()
+                    } ?: run {
+                        Toast.makeText(context, "이미지 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    Toast.makeText(context, "이미지가 갤러리에 저장되었습니다.", Toast.LENGTH_SHORT).show()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    Toast.makeText(context, "이미지 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } else {
+            // 안드로이드 9 (API 28) 이하에서는 legacy 방법 사용
+            val file = context.getExternalFilesDir(null)?.let {
+                java.io.File(it, "captured_image.png")
+            }
+            try {
+                val outputStream = file?.let { java.io.FileOutputStream(it) }
+                outputStream?.let {
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+                    it.flush()
+                    it.close()
+                    Toast.makeText(context, "이미지가 저장되었습니다.", Toast.LENGTH_SHORT).show()
+                } ?: run {
+                    Toast.makeText(context, "이미지 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+                Toast.makeText(context, "이미지 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

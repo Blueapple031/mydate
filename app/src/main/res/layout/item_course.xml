@@ -102,6 +102,12 @@
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:layout_marginStart="8dp"/>
+            <Button
+                android:id="@+id/shareButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="공유하기"
+                android:layout_marginTop="16dp"/>
         </LinearLayout>
 
         <!-- 자세히 보기 버튼 -->
