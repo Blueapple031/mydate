@@ -62,6 +62,14 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         course?.let { processCourse(it) }
+
+        mMap?.setOnMarkerClickListener { marker ->
+            val searchQuery = marker.title?.substringAfter(": ") ?: ""
+            if (searchQuery.isNotEmpty()) {
+                openWebPage("https://www.google.com/search?q=$searchQuery")
+            }
+            true
+        }
     }
 
     override fun onRequestPermissionsResult(
